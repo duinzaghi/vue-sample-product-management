@@ -1,0 +1,8 @@
+@import "variables/variable";
+
+
+#layoutSidenav{
+  .nuxt-link-active{
+    background-color: $green-1;
+  }
+}
