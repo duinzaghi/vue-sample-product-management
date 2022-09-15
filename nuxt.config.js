@@ -46,6 +46,7 @@ export default {
     '@nuxtjs/tailwindcss',
   ],
 
+  loading: '~/components/loading.vue',
   /*
   ** Disabling Bootstrap Compiled CSS
   */

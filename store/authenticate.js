@@ -11,7 +11,7 @@ export const mutations = {
   },
   resetUser (store) {
     store.user = null;
-  }
+  },
 };
 
 export const getters = {
@@ -48,12 +48,26 @@ export const actions = {
   register ({commit}, data) {
     return api.auth.register(data)
     .then(response => {
-      console.log(response.data);
       if(response.data){
         const result = response.data;
       }
         return response;
       });
+  },
+
+  update ({commit}, data) {
+    return new Promise ((resolve, reject)=>{
+      api.auth.update(data.id, data.data)
+      .then(response => {
+        console.log(response.data);
+        commit('setUser', response.data);
+        resolve(response.data.data)
+        })
+      .catch(err => {
+        alert("Failed to update");
+        reject(err)
+      });
+    })
   },
 
   logout (){

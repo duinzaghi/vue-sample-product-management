@@ -6,22 +6,41 @@
         </div>
         <div class="col-md-6 border-right">
             <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">Profile Settings</h4>
+
+                <template v-if="edit===true">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Edit Profile</h4>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">User Name</label><input type="text" class="form-control" placeholder="first name" v-model="user.username"></div>
+                    <div class="col-md-6"><label class="labels">User Name</label><input type="text" class="form-control" placeholder="first name" v-model="editProfile.username"></div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-md-12 mt-3"><label class="labels">Age</label><input type="text" class="form-control" placeholder="enter email id" v-model="user.age"></div>
-                    <div class="col-md-12 mt-3"><label class="labels">Email</label><input type="text" class="form-control" placeholder="enter email id" v-model="user.email"></div>
-                    <div class="col-md-12 mt-3"><label class="labels">Mobile Number</label><input type="Phone" class="form-control" placeholder="enter phone number" value=""></div>
+                    <div class="col-md-12 mt-3"><label class="labels">Age</label><input type="text" class="form-control" placeholder="enter your age" v-model="editProfile.age"></div>
+                    <div class="col-md-12 mt-3"><label class="labels">Email</label><input type="text" class="form-control" placeholder="enter email" v-model="editProfile.email"></div>
+                    <div class="col-md-12 mt-3"><label class="labels">Address</label><input type="text" class="form-control" placeholder="enter your address" v-model="editProfile.address"></div>
+                    <div class="col-md-12 mt-3"><label class="labels">Mobile Number</label><input type="Phone" class="form-control" placeholder="enter phone number" v-model="editProfile.phoneNumber"></div>
+                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" @click="updateProfile" type="button">Save Profile</button></div>
                 </div>
+                </template>
+                <template v-else>
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Profile</h4>
+                  </div>
+                  <div class="row mt-2">
+                      <div class="col-md-6"><label class="labels">User Name</label><input type="text" class="form-control" placeholder="first name" :value="user.username"></div>
+                  </div>
+                  <div class="row mt-3">
+                      <div class="col-md-12 mt-3"><label class="labels">Age</label><input type="text" class="form-control"  :value="user.age"></div>
+                      <div class="col-md-12 mt-3"><label class="labels">Email</label><input type="text" class="form-control"  :value="user.email"></div>
+                      <div v-show="user.address" class="col-md-12 mt-3"><label class="labels">Address</label><input type="Phone" class="form-control"  :value="user.address"></div>
+                      <div v-show="user.phoneNumber" class="col-md-12 mt-3"><label class="labels">Mobile Number</label><input type="Phone" class="form-control"  :value="user.phoneNumber"></div>
+                  </div>
+                  <div @click="setEdit(user)" class="mt-5 text-center"><button class="btn btn-primary profile-button"  type="button">Edit Profile</button></div>
+                </template>
                 <!-- <div class="row mt-3">
                     <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
                     <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
                 </div> -->
-                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Save Profile</button></div>
             </div>
         </div>
     </div>
@@ -33,6 +52,12 @@ import { mapGetters } from "vuex";
 export default {
   name: "profilePage",
   layout: "home",
+  data(){
+    return {
+      edit: false,
+      editProfile: {},
+    }
+  },
   fetch({ store, params }) {
     return store.dispatch("authenticate/fetch")
   },
@@ -40,6 +65,20 @@ export default {
     ...mapGetters({
       user: "authenticate/profile"
     }),
+  },
+  methods: {
+    setEdit(data){
+      const temp = JSON.parse(JSON.stringify(data));
+      this.edit = true;
+      this.editProfile = temp;
+    },
+    async updateProfile(){
+      console.log(this.editProfile);
+      await this.$store.dispatch('authenticate/update', { id: this.editProfile._id, data: this.editProfile}).then(res => {
+          this.$toaster.success('Update success!', {timeout: 3000});
+          this.edit = false;
+      }).catch(err => {this.$toaster.error('Register failed!', {timeout: 3000});})
+    }
   }
 }
 </script>
