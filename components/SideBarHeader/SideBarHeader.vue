@@ -16,13 +16,17 @@
                     </a>
                       <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                           <nav class="sb-sidenav-menu-nested nav">
-                              <a class="nav-link" href="/user">List user</a>
+                              <nuxt-link class="nav-link" to="/user">List user</nuxt-link>
                           </nav>
                       </div>
-                    <a class="nav-link collapsed" href="/categories" >
+                    <nuxt-link class="nav-link collapsed" to="/categories" >
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Categories
-                    </a>
+                    </nuxt-link>
+                    <nuxt-link class="nav-link collapsed" to="/products" >
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Products
+                    </nuxt-link>
                 </div>
             </div>
             <div class="sb-sidenav-footer">

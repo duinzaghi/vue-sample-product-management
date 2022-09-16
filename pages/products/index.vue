@@ -19,6 +19,11 @@
                 <th
                   class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider"
                 >
+                  Price
+                </th>
+                <th
+                  class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider"
+                >
                   Created At
                 </th>
                 <th
@@ -27,14 +32,14 @@
                   Updated At
                 </th>
                 <th
-                  class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xl font-semibold text-gray-600 uppercase tracking-wider"
+                  class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-center text-xl font-semibold text-gray-600 uppercase tracking-wider"
                 >
                   Action
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in categories" :key="index">
+              <tr v-for="(item, index) in products" :key="index">
                 <td class="px-2 py-2 text-xl border-b border-gray-200 bg-white text-sm">
                   <div class="flex items-center">
                       <p class="text-gray-900 whitespace-no-wrap pl-2">
@@ -49,6 +54,11 @@
                 </td>
                 <td class="px-2 py-2 text-xl border-b border-gray-200 bg-white text-sm">
                   <p class="text-gray-900 whitespace-no-wrap">
+                    {{item.price}}
+                  </p>
+                </td>
+                <td class="px-2 py-2 text-xl border-b border-gray-200 bg-white text-sm">
+                  <p class="text-gray-900 whitespace-no-wrap">
                     {{(moment(item.createdAt).format('MM/DD/YYYY - h:mm a')).toUpperCase()}}
                   </p>
                 </td>
@@ -58,7 +68,7 @@
                   </p>
                 </td>
 
-                <td class="px-2 py-2 text-xl border-b border-gray-200 bg-white text-sm">
+                <td class="px-2 py-2 text-xl border-b border-gray-200 bg-white text-sm text-center">
                   <button>
                     <span
                       class="relative inline-block px-3 py-1 font-semibold text-blue-900 leading-tight"
@@ -74,32 +84,6 @@
               </tr>
             </tbody>
           </table>
-
-          <div
-            class="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between"
-          >
-            <span class="text-xs xs:text-sm text-gray-900">
-              Page {{pagination.currentPage+1}} to {{pagination.totalPage}} - Showing {{pagination.currentPage*pagination.pageSize + 1 +" - " + (pagination.currentPage*pagination.pageSize + categories.length)}} of {{pagination.totalRow}} Entries
-            </span>
-            <div class="inline-flex mt-2 xs:mt-0">
-              <button
-                class="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-l"
-                :disabled = "pagination.currentPage === 0"
-                @click="paginationPage(pagination.currentPage-1)"
-              >
-                Prev
-              </button>
-              &nbsp; &nbsp;
-              <button
-                class="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-r"
-                :disabled = "disableNextPage"
-                @click="paginationPage(pagination.currentPage+1)"
-              >
-                Next
-              </button>
-            </div>
-
-            </div>
         </div>
       </div>
   </div>
@@ -108,20 +92,14 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  name: 'CategoriesPage',
+  name: 'ProductsPage',
   layout: 'home',
-  data(){
-    return {
-      disableNextPage: false,
-    }
-  },
   fetch({ store }) {
-    return store.dispatch("categories/fetch");
+    return store.dispatch("products/fetch");
   },
   computed: {
     ...mapGetters({
-      categories: "categories/getAll",
-      pagination: "categories/pagination"
+      products: "products/getAll",
     }),
   },
   mounted() {
@@ -129,12 +107,6 @@ export default {
       this.$nuxt.$loading.start()
       setTimeout(() => this.$nuxt.$loading.finish(), 500)
     });
-  },
-  methods: {
-    async paginationPage(index){
-        this.$store.state.categories.pagination.totalPage === index + 1 ? this.disableNextPage = true : this.disableNextPage = false;
-      await this.$store.dispatch("categories/pagination", {page: index});
-      },
   }
 }
 </script>
