@@ -92,7 +92,7 @@
               &nbsp; &nbsp;
               <button
                 class="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-r"
-                :disabled = "disableNextPage"
+                :disabled = "pagination.currentPage+1 === pagination.totalPage"
                 @click="paginationPage(pagination.currentPage+1)"
               >
                 Next
@@ -110,11 +110,6 @@ import { mapGetters } from "vuex";
 export default {
   name: 'CategoriesPage',
   layout: 'home',
-  data(){
-    return {
-      disableNextPage: false,
-    }
-  },
   fetch({ store }) {
     return store.dispatch("categories/fetch");
   },
@@ -132,7 +127,6 @@ export default {
   },
   methods: {
     async paginationPage(index){
-        this.$store.state.categories.pagination.totalPage === index + 1 ? this.disableNextPage = true : this.disableNextPage = false;
       await this.$store.dispatch("categories/pagination", {page: index});
       },
   }

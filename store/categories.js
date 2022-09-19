@@ -10,6 +10,9 @@ export const state = () => ({
     sortType: "",
   },
   pagination: {},
+  searchDataAll: {
+    isAll: true
+  }
 });
 
 export const mutations = {
@@ -60,6 +63,19 @@ export const actions = {
           commit("fetchSuccess", res);
           commit("pageSize", state.searchData.size);
           resolve(res);
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  },
+
+  fetchAll ({commit, state}) {
+    return new Promise((resolve, reject) =>{
+      return api.categories.getlist(state.searchDataAll)
+        .then(response => {
+          commit("fetchSuccess", response);
+          resolve(response);
         })
         .catch(err => {
           reject(err)
